@@ -7,6 +7,8 @@ An advanced freeze plugin built for PM4 servers.
 - [x] OP'ed Broadcast Message *(brooadcasts freezes/unfreeze certain players, assignable permission node)*
 - [x] Private Messages When Frozen *(when a frozen player sends a message, it sends to a private chat only staff can see)*
 
+![Display](https://cdn.discordapp.com/attachments/702559541795225670/1104887922299252878/image.png)
+
 ![Display](https://cdn.discordapp.com/attachments/702559541795225670/1104401217439924254/image.png)
 
 ![Display](https://cdn.discordapp.com/attachments/702559541795225670/1104573713766170676/fotor_2023-5-6_21_0_24.png)
