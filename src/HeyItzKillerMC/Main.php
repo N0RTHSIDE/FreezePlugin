@@ -2,15 +2,16 @@
 
 namespace HeyItzKillerMC;
 
-use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\utils\Config;
 use pocketmine\player\Player;
+use pocketmine\event\Listener;
+use pocketmine\command\Command;
+use pocketmine\utils\TextFormat;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
-use pocketmine\utils\Config;
-use pocketmine\utils\TextFormat;
-use pocketmine\event\Listener;
+use pocketmine\command\CommandSender;
+use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\player\PlayerChatEvent;
 
 class Main extends PluginBase implements Listener {
 
@@ -25,19 +26,19 @@ class Main extends PluginBase implements Listener {
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
         if (!$sender instanceof Player) {
-            $sender->sendMessage("This command can only be used in-game.");
+            $sender->sendMessage(TextFormat::RED . "This command can only be used in-game.");
             return false;
         }
 
         if (count($args) < 1) {
-            $sender->sendMessage("Usage: /" . $command->getName() . " <player>");
+            $sender->sendMessage(TextFormat::RED . "Usage: /" . $command->getName() . " <player>");
             return false;
         }
 
         $target = $this->getServer()->getPlayerExact($args[0]);
 
         if ($target === null) {
-            $sender->sendMessage("Player not found.");
+            $sender->sendMessage(TextFormat::RED . "Player not found.");
             return false;
         }
 
@@ -71,6 +72,36 @@ class Main extends PluginBase implements Listener {
     private function broadcastToOppedPlayers(string $message): void {
         foreach ($this->getServer()->getOnlinePlayers() as $player) {
             if ($player->hasPermission("freezeplugin.broadcast")) {
+                $player->sendMessage($message);
+            }
+        }
+    }
+
+    /**
+     * @param PlayerChatEvent $event
+     * @priority MONITOR
+     * @ignoreCancelled true
+     */
+    public function onPlayerChat(PlayerChatEvent $event): void {
+        $player = $event->getPlayer();
+        if ($this->isPlayerFrozen($player)) {
+            $event->cancel();
+
+            $frozenPrefix = TextFormat::BOLD . TextFormat::RED . "FROZEN " . TextFormat::RESET;
+            $formattedMessage = $frozenPrefix . $player->getName() . ": " . $event->getMessage();
+
+            $recipients = $event->getRecipients();
+            foreach ($recipients as $recipient) {
+                if ($recipient instanceof Player && $recipient->hasPermission("freezeplugin.frozenchat")) {
+                    $recipient->getNetworkSession()->onChatMessage($formattedMessage);
+                }
+            }
+        }
+    }
+
+    private function broadcastToStaff(string $message, string $permission): void {
+        foreach ($this->getServer()->getOnlinePlayers() as $player) {
+            if ($player->hasPermission($permission)) {
                 $player->sendMessage($message);
             }
         }
