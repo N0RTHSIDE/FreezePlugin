@@ -1,0 +1,28 @@
+---
+name: FreezePlugin
+version: 1.0.0
+api: 4.0.0
+main: HeyItzKillerMC\Main
+author: HeyItzKillerMC
+description: A basic plugin to freeze and unfreeze players.
+
+commands:
+  freeze:
+    description: Freeze a player
+    permission: freezeplugin.command.freeze
+    aliases: ["ss"]
+  unfreeze:
+    description: Unfreeze a player
+    permission: freezeplugin.command.unfreeze
+
+permissions:
+  freezeplugin.command.freeze:
+    description: Allows using the freeze command
+    default: op
+  freezeplugin.command.unfreeze:
+    description: Allows using the unfreeze command
+    default: op
+  freezeplugin.broadcast:
+    description: Allows the user to see when someone is 'frozen' and/or 'unfrozen'
+    default: op
+...
