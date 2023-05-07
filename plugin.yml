@@ -25,4 +25,7 @@ permissions:
   freezeplugin.broadcast:
     description: Allows the user to see when someone is 'frozen' and/or 'unfrozen'
     default: op
+  freezeplugin.frozenchat:
+    description: Allows the user to see frozen players chat messages
+    default: op
 ...
